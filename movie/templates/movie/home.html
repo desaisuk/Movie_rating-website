@@ -1,0 +1,65 @@
+{% extends "movie/base.html" %}
+
+{% block content %}
+
+    <div class="content-section"> 
+        <form type="GET">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4"> 
+                    <h2 class="article-content"> Welcome to Movie rating and reviews website </h2>
+                </legend>
+            </fieldset>
+            <div class="form-group">
+                <p class="article-content" style="font-size: larger;"> View reviews and ratings for movies to decide what to watch </p>
+                <input id="search_box" style="width: 50%; height: 40px;" type="text" name="search_box" placeholder="Search for movie...">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit"> See Reviews </button>
+                <br>
+            </div>
+        </form>
+        <div class="form-group border-top mb-6">
+            <br>
+            <p class="article-content" style="font-size: larger;"> Share your feedback about the movie to help other users </p>
+            <a class="btn btn-outline-info" href="{% url 'movie-rating' %}">Give Review</a>
+        </div>
+    </div>
+
+    {% if no_record_flag == True %}
+        <p class="article-content alert alert-danger">  No records found. Please search for another movie. </p>
+    {% endif %}
+
+    {% for movie in movies %}
+        <article class="media content-section">
+            <div class="media-body"> 
+                <h2> <a class="article-title" href="#"> {{ movie.title }} </a> </h2>
+                <p class="article-content"> {{ movie.details }} </p>
+            </div>
+        </article>
+    {% endfor %}
+    
+    {% for movie in movies %}
+        <article class="media content-section">
+            <div class="media-body"> 
+                <h2 class="article-title" style="float: left;"> Rating :  {{ movie_avg_rating.avg_rating }} <small class="text-muted">/5 stars</small> </h2>
+                <h2 class="article-title" style="float: right;"> Total Reviews :  {{ total_reviews }}</h2>
+            </div>
+        </article>
+    {% endfor %}
+    
+    {% for movie in movies %}
+    <article class="media content-section">
+        <div class="media-body">
+            <h5 class="article-title"> Reviews by other users </h5>
+            {% for movie_review in movie_reviews %} 
+                <div class="article-metadata">
+                    <a class="mr-1" href="#">{{movie_review.rating}}</a><small class="text-muted">/5 stars</small>
+                    <p class="article-content" style="float: inline-end;">{{ movie_review.comment }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+    {% endfor %}
+
+{% endblock content %}
